@@ -3,6 +3,8 @@ const { Sequelize, Model, DataTypes } = require('sequelize')
 const express = require('express')
 const app = express()
 
+app.use(express.static('dist'))
+
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialectOptions: {
     ssl: {
