@@ -4,7 +4,7 @@ const Note = require('../models/note')
 notesRouter.get('/', async (request, response) => {
   const notes = await Note.findAll()
 
-  console.log(JSON.stringify(notes))
+  // console.log(JSON.stringify(notes))
   response.json(notes)
 })
 
@@ -12,7 +12,7 @@ notesRouter.get('/:id', async (request, response, next) => {
   try {
     const note = await Note.findByPk(request.params.id)
     if (note) {
-      console.log(note.toJSON())
+      // console.log(note.toJSON())
       response.json(note)
     } else {
       response.status(404).end()
@@ -24,13 +24,13 @@ notesRouter.get('/:id', async (request, response, next) => {
 
 notesRouter.post('/', async (request, response, next) => {
   try {
-    console.log('request.body: ', request.body)
+    // console.log('request.body: ', request.body)
     const body = request.body
     if (!body.content) {
       return response.status(400).json({ error: 'content missing' })
     }
     const note = await Note.create({ ...body, date: new Date() })
-    return response.json(note)
+    return response.status(201).json(note)
   } catch(error) {
     return response.status(400).json({ error })
   }
