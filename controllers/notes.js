@@ -1,5 +1,6 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
+const User = require('../models/user')
 
 notesRouter.get('/', async (request, response) => {
   const notes = await Note.findAll()
@@ -29,7 +30,14 @@ notesRouter.post('/', async (request, response, next) => {
     if (!body.content) {
       return response.status(400).json({ error: 'content missing' })
     }
-    const note = await Note.create({ ...body, date: new Date() })
+
+    const user = await User.findByPk(body.userId)
+
+    if (!user) {
+      return response.status(400).json({ error: 'userId missing or not valid' })
+    }
+
+    const note = await Note.create({ ...body, date: new Date(), user: user._id })
     return response.status(201).json(note)
   } catch(error) {
     return response.status(400).json({ error })

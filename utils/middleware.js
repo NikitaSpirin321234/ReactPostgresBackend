@@ -13,10 +13,12 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-  logger.error(error.name)
+  logger.error(error)
 
   if (error.name === 'SequelizeDatabaseError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if(error.name === 'UniqueConstraintError') {
+    return response.status(400).json({ error: 'expected `username` to be unique' })
   }
 
   next(error)
